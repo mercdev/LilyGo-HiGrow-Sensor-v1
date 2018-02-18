@@ -1,0 +1,52 @@
+author: Jason Harrell <info@latitude17.io>
+description: LilyGo HiGrow ESP32 Plant Sensor v1
+# arch: PLATFORM
+version: 1.0
+
+libs_version: ${mos.version}
+modules_version: ${mos.version}
+mongoose_os_version: ${mos.version}
+
+config_schema:
+  - ["higrow", "o", {title: "LilyGo HiGrow ESP32 Plant Sensor v1 App Settings"}]
+  - ["higrow.deviceId", "s", "", {title: "DeviceId"}]
+  - ["higrow.temperature", "d", 0.0, {title: "Temperature"}]
+  - ["higrow.humidity", "d", 0.0, {title: "Humidity"}]
+  - ["higrow.statuslight", "i", 0, {title: "Light"}]
+  - ["higrow.moisture", "i", 0, {title: "Moisture"}]
+  - ["higrow.connected", "b", false, {title: "Connected"}]
+  - ["wifi.sta.enable", false]
+  - ["wifi.sta.ssid", ""]
+  - ["wifi.sta.pass", ""]
+  - ["wifi.ap.enable", false]
+  - ["device.id", "HiGrow_??????"]
+  - ["bt.dev_name", "HiGrowBT_"]
+
+filesystem:
+  - fs
+
+libs:
+  - origin: https://github.com/mongoose-os-libs/ca-bundle
+  - origin: https://github.com/mongoose-os-libs/bt-service-config
+  - origin: https://github.com/mongoose-os-libs/rpc-service-config
+  - origin: https://github.com/mongoose-os-libs/rpc-service-fs
+  - origin: https://github.com/mongoose-os-libs/rpc-uart
+  - origin: https://github.com/mongoose-os-libs/wifi
+  - origin: https://github.com/mongoose-os-libs/dht
+  - origin: https://github.com/mongoose-os-libs/mjs
+  - origin: https://github.com/mongoose-os-libs/adc
+
+tags:
+  - js
+  - hardware
+  - higrow
+  - esp32
+  - ble
+  - plant
+  - lilygo
+  
+build_vars:
+  ESP_IDF_SDKCONFIG_OPTS: "${build_vars.ESP_IDF_SDKCONFIG_OPTS} CONFIG_ESP32_DEEP_SLEEP_WAKEUP_DELAY=500"
+
+# Used by the mos tool to catch mos binaries incompatible with this file format
+manifest_version: 2017-05-18

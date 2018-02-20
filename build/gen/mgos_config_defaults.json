@@ -107,9 +107,8 @@
     "deviceId": "", 
     "temperature": 0.0, 
     "humidity": 0.0, 
-    "light": 0, 
+    "statuslight": 0, 
     "moisture": 0, 
-    "connected": false, 
-    "battery_calibration": 2360
+    "connected": false
   }
 }

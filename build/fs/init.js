@@ -10,32 +10,32 @@ load('api_dht.js');
 load('api_adc.js');
 load('api_rpc.js');
 
-//Pins
-let ResetPin = 0;
-let LedPin = 16;
-let DHTpin = 22;
-let SOILpin = 32;
-let LIGHTpin = 34;
+// Pins
+let resetPin = 0;
+let statusLightPin = 16;
+let dhtPin = 22;
+let moisturePin = 32;
+let lightPin = 34;
 
 // Turn on status led
-GPIO.set_mode(LedPin, GPIO.MODE_OUTPUT);
-GPIO.write(LedPin, 0);
+GPIO.set_mode(statusLightPin, GPIO.MODE_OUTPUT);
+GPIO.write(statusLightPin, 0);
 
-//Reset Handler
-GPIO.set_mode(ResetPin, GPIO.MODE_INPUT);
-GPIO.set_int_handler(ResetPin, GPIO.INT_EDGE_NEG, function(ResetPin) {
-  print('Pin', ResetPin, 'got interrupt');
-  GPIO.toggle(LedPin);
+// Reset Handler
+GPIO.set_mode(resetPin, GPIO.MODE_INPUT);
+GPIO.set_int_handler(resetPin, GPIO.INT_EDGE_NEG, function(resetPin) {
+  print('Pin', resetPin, 'got interrupt');
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.toggle(LedPin);
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.toggle(LedPin);
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.toggle(LedPin);
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.toggle(LedPin);
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.write(LedPin, 0);
+  GPIO.write(statusLightPin, 0);
 
   Cfg.set({bt:{enable:true}});
   Cfg.set({wifi:{sta:{enable:false}}});
@@ -44,36 +44,80 @@ GPIO.set_int_handler(ResetPin, GPIO.INT_EDGE_NEG, function(ResetPin) {
 
   Sys.reboot(1000);
 }, null);
-GPIO.enable_int(ResetPin);
+GPIO.enable_int(resetPin);
 
-ADC.enable(SOILpin);
-let dht = DHT.create(DHTpin, DHT.DHT11);
-let deviceId = Cfg.get("higrow.deviceId");
-if (deviceId === "")
-{
-  deviceId = Cfg.get("device.id");
-  Cfg.set("higrow.devideId", deviceId);
-}
+ADC.enable(moisturePin);
 
+let dht = DHT.create(dhtPin, DHT.DHT11);
+let deviceId = Cfg.get("device.id");
 let connected = false;
-let readSensors = Timer.set(15000, Timer.REPEAT, function() {
+let readSensors = Timer.set(5000, Timer.REPEAT, function() {
   let t = dht.getTemp();
   let h = dht.getHumidity();
-  let m = ADC.read(SOILpin);
-  let l = ADC.read(LIGHTpin); 
+  let m = ADC.read(moisturePin);
+  let l = ADC.read(lightPin);
 
-  print("DeviceId:", deviceId,"Temperature:",t,"Humidity:",h,"Moisture:",m,"Light:",l);
+  print("DeviceId:",deviceId,"Temperature:",t,"Humidity:",h,"Moisture:",m,"Light:",l);
+  
+  if (deviceId !== "" && connected)
+  {
+    GPIO.write(statusLightPin, 1);
+    let jsonData = {'DeviceId': deviceId, 'Temperature': t, 'Humidity': h, 'Moisture': m, 'Light': l};
+    HTTP.query({
+      headers: {'Content-Type' : 'application/json'},
+      url: 'http://httpbin.org/post',  // replace with your own endpoint
+      data: jsonData,
+      success: function(body, full_http_msg) 
+      { 
+        //print(body); 
+        // sleep for 15 seconds, then (re)boot up and do it all over again
+        //ESP32.deepSleep(15000000); // 15 seconds 
+      },
+      error: function(err) 
+      { 
+        print(err); 
+        //ESP32.deepSleep(30000000); // 30 seconds
+      },
+    });
 
-  //Timer.del(readSensors);
+    //Timer.del(readSensors);
+  }
 
-  //ESP32.deepSleep(3600000000); //3600 seconds / 60 minutes
-  /*
-  Cfg.set({higrow:{temperature:jsonData.Temperature}});
-  Cfg.set({higrow:{moisture:jsonData.Water}});
-  Cfg.set({higrow:{humidity:jsonData.Humidity}});
-  Cfg.set({higrow:{light:jsonData.Light}});
-  */
 }, null);
+
+// RPC Handlers
+RPC.addHandler('HG.Temp.Read', function(args){
+  return { value: dht.getTemp() };
+});
+RPC.addHandler('HG.Humidity.Read', function(args){
+  return { value: dht.getHumidity() };
+});
+RPC.addHandler('HG.Light.Read', function(args){
+  return { value: ADC.read(lightPin) };
+});
+RPC.addHandler('HG.Moisture.Read', function(args){
+  return { value: ADC.read(moisturePin) };
+});
+RPC.addHandler('HG.StatusLED.On', function(args){
+  GPIO.write(statusLightPin, 0);
+  print("LED On");
+  if (GPIO.read(statusLightPin) !== 0)
+  {
+    return false;
+  }
+  
+  return true;
+});
+RPC.addHandler('HG.StatusLED.Off', function(args){
+  GPIO.write(statusLightPin, 1);
+  if (GPIO.read(statusLightPin) !== 1)
+  {
+    return false;
+  }
+  
+  return true;
+});
+
 
 // Monitor network connectivity.
 Event.addGroupHandler(Net.EVENT_GRP, function(ev, evdata, arg) {

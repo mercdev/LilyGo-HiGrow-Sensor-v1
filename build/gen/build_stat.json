@@ -2,5 +2,5 @@
   "arch": "esp32",
   "platform": "esp32",
   "app_name": "LilyGo-HiGrow-ESP32-Mongoose-OS-Firmware",
-  "build_time_ms": 31259
+  "build_time_ms": 26383
 }

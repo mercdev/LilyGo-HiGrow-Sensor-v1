@@ -138,10 +138,9 @@ struct mgos_config_higrow {
   char *deviceId;
   double temperature;
   double humidity;
-  int light;
+  int statuslight;
   int moisture;
   int connected;
-  int battery_calibration;
 };
 
 struct mgos_config {
@@ -252,10 +251,9 @@ const struct mgos_config_higrow *mgos_config_get_higrow(struct mgos_config *cfg)
 const char *mgos_config_get_higrow_deviceId(struct mgos_config *cfg);
 double      mgos_config_get_higrow_temperature(struct mgos_config *cfg);
 double      mgos_config_get_higrow_humidity(struct mgos_config *cfg);
-int         mgos_config_get_higrow_light(struct mgos_config *cfg);
+int         mgos_config_get_higrow_statuslight(struct mgos_config *cfg);
 int         mgos_config_get_higrow_moisture(struct mgos_config *cfg);
 int         mgos_config_get_higrow_connected(struct mgos_config *cfg);
-int         mgos_config_get_higrow_battery_calibration(struct mgos_config *cfg);
 
 void mgos_config_set_device_id(struct mgos_config *cfg, const char *val);
 void mgos_config_set_device_password(struct mgos_config *cfg, const char *val);
@@ -338,10 +336,9 @@ void mgos_config_set_wifi_ap_keep_enabled(struct mgos_config *cfg, int         v
 void mgos_config_set_higrow_deviceId(struct mgos_config *cfg, const char *val);
 void mgos_config_set_higrow_temperature(struct mgos_config *cfg, double      val);
 void mgos_config_set_higrow_humidity(struct mgos_config *cfg, double      val);
-void mgos_config_set_higrow_light(struct mgos_config *cfg, int         val);
+void mgos_config_set_higrow_statuslight(struct mgos_config *cfg, int         val);
 void mgos_config_set_higrow_moisture(struct mgos_config *cfg, int         val);
 void mgos_config_set_higrow_connected(struct mgos_config *cfg, int         val);
-void mgos_config_set_higrow_battery_calibration(struct mgos_config *cfg, int         val);
 /* }}} */
 
 extern struct mgos_config mgos_sys_config;
@@ -441,10 +438,9 @@ static inline const struct mgos_config_higrow *mgos_sys_config_get_higrow(void) 
 static inline const char *mgos_sys_config_get_higrow_deviceId(void) { return mgos_config_get_higrow_deviceId(&mgos_sys_config); }
 static inline double      mgos_sys_config_get_higrow_temperature(void) { return mgos_config_get_higrow_temperature(&mgos_sys_config); }
 static inline double      mgos_sys_config_get_higrow_humidity(void) { return mgos_config_get_higrow_humidity(&mgos_sys_config); }
-static inline int         mgos_sys_config_get_higrow_light(void) { return mgos_config_get_higrow_light(&mgos_sys_config); }
+static inline int         mgos_sys_config_get_higrow_statuslight(void) { return mgos_config_get_higrow_statuslight(&mgos_sys_config); }
 static inline int         mgos_sys_config_get_higrow_moisture(void) { return mgos_config_get_higrow_moisture(&mgos_sys_config); }
 static inline int         mgos_sys_config_get_higrow_connected(void) { return mgos_config_get_higrow_connected(&mgos_sys_config); }
-static inline int         mgos_sys_config_get_higrow_battery_calibration(void) { return mgos_config_get_higrow_battery_calibration(&mgos_sys_config); }
 
 static inline void mgos_sys_config_set_device_id(const char *val) { mgos_config_set_device_id(&mgos_sys_config, val); }
 static inline void mgos_sys_config_set_device_password(const char *val) { mgos_config_set_device_password(&mgos_sys_config, val); }
@@ -527,10 +523,9 @@ static inline void mgos_sys_config_set_wifi_ap_keep_enabled(int         val) { m
 static inline void mgos_sys_config_set_higrow_deviceId(const char *val) { mgos_config_set_higrow_deviceId(&mgos_sys_config, val); }
 static inline void mgos_sys_config_set_higrow_temperature(double      val) { mgos_config_set_higrow_temperature(&mgos_sys_config, val); }
 static inline void mgos_sys_config_set_higrow_humidity(double      val) { mgos_config_set_higrow_humidity(&mgos_sys_config, val); }
-static inline void mgos_sys_config_set_higrow_light(int         val) { mgos_config_set_higrow_light(&mgos_sys_config, val); }
+static inline void mgos_sys_config_set_higrow_statuslight(int         val) { mgos_config_set_higrow_statuslight(&mgos_sys_config, val); }
 static inline void mgos_sys_config_set_higrow_moisture(int         val) { mgos_config_set_higrow_moisture(&mgos_sys_config, val); }
 static inline void mgos_sys_config_set_higrow_connected(int         val) { mgos_config_set_higrow_connected(&mgos_sys_config, val); }
-static inline void mgos_sys_config_set_higrow_battery_calibration(int         val) { mgos_config_set_higrow_battery_calibration(&mgos_sys_config, val); }
 
 
 const struct mgos_conf_entry *mgos_config_schema();

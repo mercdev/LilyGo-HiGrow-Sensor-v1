@@ -10,32 +10,32 @@ load('api_dht.js');
 load('api_adc.js');
 load('api_rpc.js');
 
-//Pins
+// Pins
 let resetPin = 0;
-let ledPin = 16;
+let statusLightPin = 16;
 let dhtPin = 22;
 let moisturePin = 32;
-let statusLightPin = 34;
+let lightPin = 34;
 
 // Turn on status led
-GPIO.set_mode(ledPin, GPIO.MODE_OUTPUT);
-GPIO.write(ledPin, 0);
+GPIO.set_mode(statusLightPin, GPIO.MODE_OUTPUT);
+GPIO.write(statusLightPin, 0);
 
-//Reset Handler
+// Reset Handler
 GPIO.set_mode(resetPin, GPIO.MODE_INPUT);
 GPIO.set_int_handler(resetPin, GPIO.INT_EDGE_NEG, function(resetPin) {
   print('Pin', resetPin, 'got interrupt');
-  GPIO.toggle(ledPin);
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.toggle(ledPin);
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.toggle(ledPin);
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.toggle(ledPin);
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.toggle(ledPin);
+  GPIO.toggle(statusLightPin);
   Sys.usleep(200000);
-  GPIO.write(ledPin, 0);
+  GPIO.write(statusLightPin, 0);
 
   Cfg.set({bt:{enable:true}});
   Cfg.set({wifi:{sta:{enable:false}}});
@@ -55,21 +55,21 @@ let readSensors = Timer.set(5000, Timer.REPEAT, function() {
   let t = dht.getTemp();
   let h = dht.getHumidity();
   let m = ADC.read(moisturePin);
-  let l = ADC.read(statusLightPin);
+  let l = ADC.read(lightPin);
 
-  print("DeviceId:",deviceId,"Temperature:",t,"Humidity:",h,"Moisture:",m,"StatusLight:",l);
+  print("DeviceId:",deviceId,"Temperature:",t,"Humidity:",h,"Moisture:",m,"Light:",l);
   
   if (deviceId !== "" && connected)
   {
-    GPIO.write(ledPin, 1);
-    let jsonData = {DeviceId: deviceId, Temperature: t, Humidity: h, Moisture: m, StatusLight: l};
+    GPIO.write(statusLightPin, 1);
+    let jsonData = {'DeviceId': deviceId, 'Temperature': t, 'Humidity': h, 'Moisture': m, 'Light': l};
     HTTP.query({
       headers: {'Content-Type' : 'application/json'},
       url: 'http://httpbin.org/post',  // replace with your own endpoint
       data: jsonData,
       success: function(body, full_http_msg) 
       { 
-        print(body); 
+        //print(body); 
         // sleep for 15 seconds, then (re)boot up and do it all over again
         //ESP32.deepSleep(15000000); // 15 seconds 
       },
@@ -93,15 +93,15 @@ RPC.addHandler('HG.Humidity.Read', function(args){
   return { value: dht.getHumidity() };
 });
 RPC.addHandler('HG.Light.Read', function(args){
-  return { value: ADC.read(statusLightPin) };
+  return { value: ADC.read(lightPin) };
 });
 RPC.addHandler('HG.Moisture.Read', function(args){
   return { value: ADC.read(moisturePin) };
 });
 RPC.addHandler('HG.StatusLED.On', function(args){
-  GPIO.write(ledPin, 0);
+  GPIO.write(statusLightPin, 0);
   print("LED On");
-  if (GPIO.read(ledPin) !== 0)
+  if (GPIO.read(statusLightPin) !== 0)
   {
     return false;
   }
@@ -109,8 +109,8 @@ RPC.addHandler('HG.StatusLED.On', function(args){
   return true;
 });
 RPC.addHandler('HG.StatusLED.Off', function(args){
-  GPIO.write(ledPin, 1);
-  if (GPIO.read(ledPin) !== 1)
+  GPIO.write(statusLightPin, 1);
+  if (GPIO.read(statusLightPin) !== 1)
   {
     return false;
   }

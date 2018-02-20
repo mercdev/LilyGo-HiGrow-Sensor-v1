@@ -3,8 +3,8 @@
 #include <stddef.h>
 #include "mgos_config.h"
 
-const struct mgos_conf_entry mgos_config_schema_[100] = {
-  {.type = CONF_TYPE_OBJECT, .key = "", .num_desc = 99},
+const struct mgos_conf_entry mgos_config_schema_[99] = {
+  {.type = CONF_TYPE_OBJECT, .key = "", .num_desc = 98},
   {.type = CONF_TYPE_OBJECT, .key = "device", .num_desc = 2},
   {.type = CONF_TYPE_STRING, .key = "id", .offset = offsetof(struct mgos_config, device.id)},
   {.type = CONF_TYPE_STRING, .key = "password", .offset = offsetof(struct mgos_config, device.password)},
@@ -96,14 +96,13 @@ const struct mgos_conf_entry mgos_config_schema_[100] = {
   {.type = CONF_TYPE_INT, .key = "disable_after", .offset = offsetof(struct mgos_config, wifi.ap.disable_after)},
   {.type = CONF_TYPE_STRING, .key = "hostname", .offset = offsetof(struct mgos_config, wifi.ap.hostname)},
   {.type = CONF_TYPE_BOOL, .key = "keep_enabled", .offset = offsetof(struct mgos_config, wifi.ap.keep_enabled)},
-  {.type = CONF_TYPE_OBJECT, .key = "higrow", .num_desc = 7},
+  {.type = CONF_TYPE_OBJECT, .key = "higrow", .num_desc = 6},
   {.type = CONF_TYPE_STRING, .key = "deviceId", .offset = offsetof(struct mgos_config, higrow.deviceId)},
   {.type = CONF_TYPE_DOUBLE, .key = "temperature", .offset = offsetof(struct mgos_config, higrow.temperature)},
   {.type = CONF_TYPE_DOUBLE, .key = "humidity", .offset = offsetof(struct mgos_config, higrow.humidity)},
-  {.type = CONF_TYPE_INT, .key = "light", .offset = offsetof(struct mgos_config, higrow.light)},
+  {.type = CONF_TYPE_INT, .key = "statuslight", .offset = offsetof(struct mgos_config, higrow.statuslight)},
   {.type = CONF_TYPE_INT, .key = "moisture", .offset = offsetof(struct mgos_config, higrow.moisture)},
   {.type = CONF_TYPE_BOOL, .key = "connected", .offset = offsetof(struct mgos_config, higrow.connected)},
-  {.type = CONF_TYPE_INT, .key = "battery_calibration", .offset = offsetof(struct mgos_config, higrow.battery_calibration)},
 };
 
 const struct mgos_conf_entry *mgos_config_schema() {
@@ -399,17 +398,14 @@ double      mgos_config_get_higrow_temperature(struct mgos_config *cfg) {
 double      mgos_config_get_higrow_humidity(struct mgos_config *cfg) {
   return cfg->higrow.humidity;
 }
-int         mgos_config_get_higrow_light(struct mgos_config *cfg) {
-  return cfg->higrow.light;
+int         mgos_config_get_higrow_statuslight(struct mgos_config *cfg) {
+  return cfg->higrow.statuslight;
 }
 int         mgos_config_get_higrow_moisture(struct mgos_config *cfg) {
   return cfg->higrow.moisture;
 }
 int         mgos_config_get_higrow_connected(struct mgos_config *cfg) {
   return cfg->higrow.connected;
-}
-int         mgos_config_get_higrow_battery_calibration(struct mgos_config *cfg) {
-  return cfg->higrow.battery_calibration;
 }
 /* }}} */
 
@@ -657,16 +653,13 @@ void mgos_config_set_higrow_temperature(struct mgos_config *cfg, double      val
 void mgos_config_set_higrow_humidity(struct mgos_config *cfg, double      val) {
   cfg->higrow.humidity = val;
 }
-void mgos_config_set_higrow_light(struct mgos_config *cfg, int         val) {
-  cfg->higrow.light = val;
+void mgos_config_set_higrow_statuslight(struct mgos_config *cfg, int         val) {
+  cfg->higrow.statuslight = val;
 }
 void mgos_config_set_higrow_moisture(struct mgos_config *cfg, int         val) {
   cfg->higrow.moisture = val;
 }
 void mgos_config_set_higrow_connected(struct mgos_config *cfg, int         val) {
   cfg->higrow.connected = val;
-}
-void mgos_config_set_higrow_battery_calibration(struct mgos_config *cfg, int         val) {
-  cfg->higrow.battery_calibration = val;
 }
 /* }}} */

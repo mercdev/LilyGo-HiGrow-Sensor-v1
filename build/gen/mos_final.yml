@@ -5,7 +5,7 @@ platform: esp32
 platforms:
 - esp32
 author: Jason Harrell <info@latitude17.io>
-description: LilyGo HiGrow ESP32 Plant Sensor
+description: LilyGo HiGrow ESP32 Plant Sensor v1
 sources:
 - /fwbuild-volumes/latest/apps/LilyGo-HiGrow-ESP32-Mongoose-OS-Firmware/esp32/build_contexts/build_ctx_913791226/build/gen/deps_init.c
 - /fwbuild-volumes/latest/apps/LilyGo-HiGrow-ESP32-Mongoose-OS-Firmware/esp32/build_contexts/build_ctx_913791226/libs/adc/esp32/src/esp32_adc.c
@@ -324,7 +324,7 @@ config_schema:
   - title: Keep AP enabled when station is on
 - - higrow
   - o
-  - title: LilyGo HiGrow ESP32 Plant Sensor App Settings
+  - title: LilyGo HiGrow ESP32 Plant Sensor v1 App Settings
 - - higrow.deviceId
   - s
   - ""
@@ -337,7 +337,7 @@ config_schema:
   - d
   - 0
   - title: Humidity
-- - higrow.light
+- - higrow.statuslight
   - i
   - 0
   - title: Light
@@ -349,10 +349,6 @@ config_schema:
   - b
   - false
   - title: Connected
-- - higrow.battery_calibration
-  - i
-  - 2360
-  - title: Battery ADC value at 4000mV
 - - wifi.sta.enable
   - false
 - - wifi.sta.ssid

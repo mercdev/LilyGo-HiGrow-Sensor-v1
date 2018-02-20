@@ -247,7 +247,7 @@
   - title: Keep AP enabled when station is on
 - - higrow
   - o
-  - title: LilyGo HiGrow ESP32 Plant Sensor App Settings
+  - title: LilyGo HiGrow ESP32 Plant Sensor v1 App Settings
 - - higrow.deviceId
   - s
   - ""
@@ -260,7 +260,7 @@
   - d
   - 0
   - title: Humidity
-- - higrow.light
+- - higrow.statuslight
   - i
   - 0
   - title: Light
@@ -272,10 +272,6 @@
   - b
   - false
   - title: Connected
-- - higrow.battery_calibration
-  - i
-  - 2360
-  - title: Battery ADC value at 4000mV
 - - wifi.sta.enable
   - false
 - - wifi.sta.ssid

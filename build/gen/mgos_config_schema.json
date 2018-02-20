@@ -90,12 +90,11 @@
   ["wifi.ap.disable_after", "i", {"title": "If > 0, will disable itself after the specified number of seconds"}],
   ["wifi.ap.hostname", "s", {"title": "If not empty, DNS server will resolve given host name to the IP address of AP"}],
   ["wifi.ap.keep_enabled", "b", {"title": "Keep AP enabled when station is on"}],
-  ["higrow", "o", {"title": "LilyGo HiGrow ESP32 Plant Sensor App Settings"}],
+  ["higrow", "o", {"title": "LilyGo HiGrow ESP32 Plant Sensor v1 App Settings"}],
   ["higrow.deviceId", "s", {"title": "DeviceId"}],
   ["higrow.temperature", "d", {"title": "Temperature"}],
   ["higrow.humidity", "d", {"title": "Humidity"}],
-  ["higrow.light", "i", {"title": "Light"}],
+  ["higrow.statuslight", "i", {"title": "Light"}],
   ["higrow.moisture", "i", {"title": "Moisture"}],
-  ["higrow.connected", "b", {"title": "Connected"}],
-  ["higrow.battery_calibration", "i", {"title": "Battery ADC value at 4000mV"}]
+  ["higrow.connected", "b", {"title": "Connected"}]
 ]

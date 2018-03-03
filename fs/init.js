@@ -15,7 +15,6 @@ let resetPin = 0;
 let statusLightPin = 16;
 let dhtPin = 22;
 let moisturePin = 32;
-let lightPin = 34;
 
 // Turn on status led
 GPIO.set_mode(statusLightPin, GPIO.MODE_OUTPUT);
@@ -55,14 +54,13 @@ let readSensors = Timer.set(5000, Timer.REPEAT, function() {
   let t = dht.getTemp();
   let h = dht.getHumidity();
   let m = ADC.read(moisturePin);
-  let l = ADC.read(lightPin);
 
-  print("DeviceId:",deviceId,"Temperature:",t,"Humidity:",h,"Moisture:",m,"Light:",l);
+  print("DeviceId:",deviceId,"Temperature:",t,"Humidity:",h,"Moisture:",m);
   
   if (deviceId !== "" && connected)
   {
     GPIO.write(statusLightPin, 1);
-    let jsonData = {'DeviceId': deviceId, 'Temperature': t, 'Humidity': h, 'Moisture': m, 'Light': l};
+    let jsonData = {'DeviceId': deviceId, 'Temperature': t, 'Humidity': h, 'Moisture': m};
     HTTP.query({
       headers: {'Content-Type' : 'application/json'},
       url: 'http://httpbin.org/post',  // replace with your own endpoint

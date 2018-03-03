@@ -1,4 +1,5 @@
 author: Jason Harrell <info@latitude17.io>
+#original author Luca Fabbri <luca@higrow.tech>
 description: LilyGo HiGrow ESP32 Plant Sensor v1
 # arch: PLATFORM
 version: 1.0
@@ -12,7 +13,6 @@ config_schema:
   - ["higrow.deviceId", "s", "", {title: "DeviceId"}]
   - ["higrow.temperature", "d", 0.0, {title: "Temperature"}]
   - ["higrow.humidity", "d", 0.0, {title: "Humidity"}]
-  - ["higrow.statuslight", "i", 0, {title: "Light"}]
   - ["higrow.moisture", "i", 0, {title: "Moisture"}]
   - ["higrow.connected", "b", false, {title: "Connected"}]
   - ["wifi.sta.enable", false]

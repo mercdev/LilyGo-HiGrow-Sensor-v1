@@ -1,4 +1,4 @@
-# LilyGo HiGrow ESP32 Plant Monitoring Sensor Firmware
+# LilyGo HiGrow ESP32 Plant Monitoring Sensor Firmware (Hardware v1)
 
 <p align="center">
   <img src="LilyGO_HiGrow_Rev1_PhotoFrontHiGrow.jpg" width="60%">

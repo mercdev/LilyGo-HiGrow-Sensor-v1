@@ -24,16 +24,11 @@ GPIO.write(statusLightPin, 0);
 GPIO.set_mode(resetPin, GPIO.MODE_INPUT);
 GPIO.set_int_handler(resetPin, GPIO.INT_EDGE_NEG, function(resetPin) {
   print('Pin', resetPin, 'got interrupt');
-  GPIO.toggle(statusLightPin);
-  Sys.usleep(200000);
-  GPIO.toggle(statusLightPin);
-  Sys.usleep(200000);
-  GPIO.toggle(statusLightPin);
-  Sys.usleep(200000);
-  GPIO.toggle(statusLightPin);
-  Sys.usleep(200000);
-  GPIO.toggle(statusLightPin);
-  Sys.usleep(200000);
+  for (let i=0; i<=5; i++)
+  {
+    GPIO.toggle(statusLightPin);
+    Sys.usleep(200000);
+  }
   GPIO.write(statusLightPin, 0);
 
   Cfg.set({bt:{enable:true}});
@@ -43,12 +38,20 @@ GPIO.set_int_handler(resetPin, GPIO.INT_EDGE_NEG, function(resetPin) {
 
   Sys.reboot(1000);
 }, null);
-GPIO.enable_int(resetPin);
 
+print("Starting...");
+
+GPIO.enable_int(resetPin);
 ADC.enable(moisturePin);
 
 let dht = DHT.create(dhtPin, DHT.DHT11);
 let deviceId = Cfg.get("device.id");
+if (deviceId === "")
+{
+  deviceId = Cfg.get("higrow.deviceId");
+  Cfg.set("device.id", deviceId);
+}
+
 let connected = false;
 let readSensors = Timer.set(5000, Timer.REPEAT, function() {
   let t = dht.getTemp();
@@ -59,7 +62,8 @@ let readSensors = Timer.set(5000, Timer.REPEAT, function() {
   
   if (deviceId !== "" && connected)
   {
-    GPIO.write(statusLightPin, 1);
+    GPIO.write(statusLightPin, 0);
+    
     let jsonData = {'DeviceId': deviceId, 'Temperature': t, 'Humidity': h, 'Moisture': m};
     HTTP.query({
       headers: {'Content-Type' : 'application/json'},
@@ -78,7 +82,12 @@ let readSensors = Timer.set(5000, Timer.REPEAT, function() {
       },
     });
 
+    GPIO.write(statusLightPin, 1);
     //Timer.del(readSensors);
+  }
+  else
+  {
+    print("DeviceId:",deviceId,"Connected:",connected);
   }
 
 }, null);
@@ -90,11 +99,11 @@ RPC.addHandler('HG.Temp.Read', function(args){
 RPC.addHandler('HG.Humidity.Read', function(args){
   return { value: dht.getHumidity() };
 });
-RPC.addHandler('HG.Light.Read', function(args){
-  return { value: ADC.read(lightPin) };
-});
 RPC.addHandler('HG.Moisture.Read', function(args){
   return { value: ADC.read(moisturePin) };
+});
+RPC.addHandler('HG.StatusLED.Read', function(args){
+  return { value: GPIO.read(statusLightPin) };
 });
 RPC.addHandler('HG.StatusLED.On', function(args){
   GPIO.write(statusLightPin, 0);
@@ -134,4 +143,6 @@ Event.addGroupHandler(Net.EVENT_GRP, function(ev, evdata, arg) {
     evs = 'GOT_IP';
     connected = true;
   }
+  
+  print(evs);
 }, null);

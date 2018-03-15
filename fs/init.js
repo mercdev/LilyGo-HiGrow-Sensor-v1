@@ -29,9 +29,11 @@ GPIO.set_int_handler(resetPin, GPIO.INT_EDGE_NEG, function(resetPin) {
     GPIO.toggle(statusLightPin);
     Sys.usleep(200000);
   }
-  GPIO.write(statusLightPin, 0);
-
+  GPIO.write(statusLightPin, 1);
+  
+  // enable bluetooth
   Cfg.set({bt:{enable:true}});
+  // disable and clear wifi-config
   Cfg.set({wifi:{sta:{enable:false}}});
   Cfg.set({wifi:{ap:{enable:false}}});
   Cfg.set({wifi:{sta:{ssid:'',pass:''}}});
@@ -63,7 +65,6 @@ let readSensors = Timer.set(5000, Timer.REPEAT, function() {
   if (deviceId !== "" && connected)
   {
     GPIO.write(statusLightPin, 0);
-    
     let jsonData = {'DeviceId': deviceId, 'Temperature': t, 'Humidity': h, 'Moisture': m};
     HTTP.query({
       headers: {'Content-Type' : 'application/json'},
@@ -88,6 +89,7 @@ let readSensors = Timer.set(5000, Timer.REPEAT, function() {
   else
   {
     print("DeviceId:",deviceId,"Connected:",connected);
+    GPIO.write(statusLightPin, 1);
   }
 
 }, null);

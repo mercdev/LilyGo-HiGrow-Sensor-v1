@@ -20,7 +20,7 @@ config_schema:
   - ["wifi.sta.pass", ""]
   - ["wifi.ap.enable", false]
   - ["device.id", "HiGrow_??????"]
-  - ["bt.dev_name", "HiGrowBT_"]
+  - ["bt.dev_name", "HiGrowBT_??????"]
 
 filesystem:
   - fs
